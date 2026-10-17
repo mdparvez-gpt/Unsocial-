@@ -1,6 +1,59 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+
+interface Post {
+  id: string;
+  created_at: string;
+  content: string;
+  author_name: string;
+  likes_count: number;
+}
 
 export default function Home() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [newPost, setNewPost] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Fetch posts from Supabase
+  const fetchPosts = async () => {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setPosts(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // Handle Post Creation
+  const handleCreatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPost.trim()) return;
+
+    setLoading(true);
+    const { error } = await supabase.from('posts').insert([
+      {
+        content: newPost,
+        author_name: 'Parvez',
+      },
+    ]);
+
+    if (!error) {
+      setNewPost('');
+      fetchPosts();
+    } else {
+      alert('Error creating post!');
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
       {/* Top Navbar */}
@@ -46,56 +99,65 @@ export default function Home() {
         <section className="col-span-1 md:col-span-2 space-y-4">
           {/* Create Post Box */}
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">
-                P
+            <form onSubmit={handleCreatePost}>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">
+                  P
+                </div>
+                <input
+                  type="text"
+                  value={newPost}
+                  onChange={(e) => setNewPost(e.target.value)}
+                  placeholder="What's on your mind, Parvez?"
+                  className="w-full bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none"
+                />
               </div>
-              <input
-                type="text"
-                placeholder="What's on your mind, Parvez?"
-                className="w-full bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none"
-              />
-            </div>
-            <hr className="my-3 border-gray-100" />
-            <div className="flex justify-between text-sm text-gray-600 px-2">
-              <button className="hover:bg-gray-50 p-2 rounded-lg flex items-center space-x-1">
-                <span>🖼️</span> <span>Photo/Video</span>
-              </button>
-              <button className="hover:bg-gray-50 p-2 rounded-lg flex items-center space-x-1">
-                <span>😊</span> <span>Feeling/Activity</span>
-              </button>
-            </div>
+              <hr className="my-3 border-gray-100" />
+              <div className="flex justify-between items-center text-sm text-gray-600 px-2">
+                <div className="flex space-x-2">
+                  <span className="hover:bg-gray-50 p-2 rounded-lg cursor-pointer">🖼️ Photo/Video</span>
+                  <span className="hover:bg-gray-50 p-2 rounded-lg cursor-pointer">😊 Feeling</span>
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-blue-600 text-white px-4 py-1.5 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {loading ? 'Posting...' : 'Post'}
+                </button>
+              </div>
+            </form>
           </div>
 
-          {/* Sample Post Card */}
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-purple-500 text-white font-bold flex items-center justify-center">
-                U
+          {/* Dynamic Feed Posts */}
+          {posts.map((post) => (
+            <div key={post.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">
+                  {post.author_name[0]}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">{post.author_name}</h3>
+                  <p className="text-xs text-gray-500">{new Date(post.created_at).toLocaleTimeString()} • 🌎</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-sm">Unsocial Official</h3>
-                <p className="text-xs text-gray-500">Just now • 🌎</p>
+              <p className="text-sm text-gray-800">{post.content}</p>
+              <hr className="border-gray-100" />
+              <div className="flex justify-around text-sm font-medium text-gray-600">
+                <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">👍 Like ({post.likes_count})</button>
+                <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">💬 Comment</button>
+                <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">↪️ Share</button>
               </div>
             </div>
-            <p className="text-sm text-gray-800">
-              Welcome to Unsocial! 🎉 We are building a modern, fast, and lightweight social platform.
-            </p>
-            <hr className="border-gray-100" />
-            <div className="flex justify-around text-sm font-medium text-gray-600">
-              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">👍 Like</button>
-              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">💬 Comment</button>
-              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">↪️ Share</button>
-            </div>
-          </div>
+          ))}
         </section>
 
         {/* Right Sidebar */}
         <aside className="hidden md:block md:col-span-1 space-y-3">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <h2 className="font-semibold text-sm text-gray-500 mb-2">Sponsored / Notice</h2>
+            <h2 className="font-semibold text-sm text-gray-500 mb-2">Notice</h2>
             <p className="text-xs text-gray-600">
-              Unsocial is now live on Vercel! Stay tuned for active updates.
+              Unsocial is live! Supabase database and posting system are now connected.
             </p>
           </div>
         </aside>
