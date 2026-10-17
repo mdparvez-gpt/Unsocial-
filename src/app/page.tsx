@@ -1,69 +1,106 @@
-import Image from "next/image";
+import React from 'react';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <div className="min-h-screen bg-gray-100 text-gray-900">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <h1 className="text-2xl font-bold text-blue-600 tracking-tight">Unsocial</h1>
+            <input
+              type="text"
+              placeholder="Search Unsocial..."
+              className="hidden sm:block bg-gray-100 rounded-full px-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">🔔</button>
+            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">💬</button>
+            <div className="w-8 h-8 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">
+              P
+            </div>
+          </div>
         </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Left Sidebar */}
+        <aside className="hidden md:block md:col-span-1 space-y-2">
+          <div className="p-3 bg-white rounded-xl shadow-sm hover:bg-gray-50 cursor-pointer flex items-center space-x-3">
+            <span>👤</span>
+            <span className="font-semibold text-sm">Parvez</span>
+          </div>
+          <div className="p-3 bg-white rounded-xl shadow-sm hover:bg-gray-50 cursor-pointer flex items-center space-x-3">
+            <span>👥</span>
+            <span className="font-semibold text-sm">Friends</span>
+          </div>
+          <div className="p-3 bg-white rounded-xl shadow-sm hover:bg-gray-50 cursor-pointer flex items-center space-x-3">
+            <span>🔖</span>
+            <span className="font-semibold text-sm">Saved</span>
+          </div>
+        </aside>
+
+        {/* Center Feed */}
+        <section className="col-span-1 md:col-span-2 space-y-4">
+          {/* Create Post Box */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">
+                P
+              </div>
+              <input
+                type="text"
+                placeholder="What's on your mind, Parvez?"
+                className="w-full bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none"
+              />
+            </div>
+            <hr className="my-3 border-gray-100" />
+            <div className="flex justify-between text-sm text-gray-600 px-2">
+              <button className="hover:bg-gray-50 p-2 rounded-lg flex items-center space-x-1">
+                <span>🖼️</span> <span>Photo/Video</span>
+              </button>
+              <button className="hover:bg-gray-50 p-2 rounded-lg flex items-center space-x-1">
+                <span>😊</span> <span>Feeling/Activity</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Sample Post Card */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-purple-500 text-white font-bold flex items-center justify-center">
+                U
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Unsocial Official</h3>
+                <p className="text-xs text-gray-500">Just now • 🌎</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-800">
+              Welcome to Unsocial! 🎉 We are building a modern, fast, and lightweight social platform.
+            </p>
+            <hr className="border-gray-100" />
+            <div className="flex justify-around text-sm font-medium text-gray-600">
+              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">👍 Like</button>
+              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">💬 Comment</button>
+              <button className="hover:bg-gray-50 w-full py-1.5 rounded-lg">↪️ Share</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Right Sidebar */}
+        <aside className="hidden md:block md:col-span-1 space-y-3">
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            <h2 className="font-semibold text-sm text-gray-500 mb-2">Sponsored / Notice</h2>
+            <p className="text-xs text-gray-600">
+              Unsocial is now live on Vercel! Stay tuned for active updates.
+            </p>
+          </div>
+        </aside>
       </main>
     </div>
   );
 }
+
